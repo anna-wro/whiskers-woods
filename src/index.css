@@ -1,3 +1,18 @@
 body {
-  color: red;
+  color: rgb(0, 0, 255);
+}
+
+.map-container {
+  width: 600px;
+  height: 400px;
+  background-color: #c9d8de;
+  position: relative;
+}
+
+.user {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(46, 35, 246);
+  border-radius: 50%;
+  position: absolute;
 }
