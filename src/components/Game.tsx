@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from "react";
+import { copy } from "./copy";
+import { Position } from "./types";
+import { MapRender } from "./MapRender";
+import { GameMap } from "../GameMap";
 
-export const Map = () => {
+export const Game = () => {
   const mapWidth = 600;
   const mapHeight = 400;
   const userSize = 20;
-  const userInitialPosition = {
+  const userInitialPosition: Position = {
     x: mapWidth / 2 - userSize / 2,
-    y: mapHeight / 2 - userSize / 2
+    y: mapHeight / 2 - userSize / 2,
   };
 
-  const [userPosition, setUserPosition] = useState(userInitialPosition);
+  const [userPosition, setUserPosition] = useState<Position>(userInitialPosition);
+  const [map] = useState<GameMap>(new GameMap(mapWidth, mapHeight));
+
+  const updateUserPosition = (updated: Position) => {
+    setUserPosition(updated);
+    map.markVisited(updated);
+  }
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -26,7 +36,7 @@ export const Map = () => {
         x = Math.min(x + distance, mapWidth - userSize);
       }
 
-      setUserPosition({ x, y });
+      updateUserPosition({ x, y });
     };
 
     document.addEventListener("keydown", handleKeyDown);
@@ -37,17 +47,9 @@ export const Map = () => {
   }, [userPosition]);
 
   return (
-    <div>
-      <h1>Map Explorer</h1>
-      <div className="map-container">
-        <div
-          className="user"
-          style={{
-            top: `${userPosition.y}px`,
-            left: `${userPosition.x}px`
-          }}
-        />
-      </div>
+    <div className="container">
+      <h1>{copy.title}</h1>
+      <MapRender userPosition={userPosition} map={map} />
     </div>
   );
 };
