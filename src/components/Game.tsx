@@ -8,9 +8,10 @@ export const Game = () => {
   const mapWidth = 600;
   const mapHeight = 400;
   const userSize = 20;
+  const cellSize = 10;
   const userInitialPosition: Position = {
-    x: mapWidth / 2 - userSize / 2,
-    y: mapHeight / 2 - userSize / 2,
+    x: (mapWidth / 2) / cellSize,
+    y: (mapHeight / 2) / cellSize,
   };
 
   const [userPosition, setUserPosition] = useState<Position>(userInitialPosition);
@@ -23,7 +24,7 @@ export const Game = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const distance = 20;
+      const distance = 1;
       let { x, y } = userPosition;
 
       if (event.key === "ArrowUp") {
@@ -49,7 +50,7 @@ export const Game = () => {
   return (
     <div className="container">
       <h1>{copy.title}</h1>
-      <MapRender userPosition={userPosition} map={map} />
+      <MapRender userPosition={userPosition} map={map} cellSize={cellSize} />
     </div>
   );
 };
