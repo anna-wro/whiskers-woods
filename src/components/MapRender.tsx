@@ -16,8 +16,6 @@ export const MapRender = ({ userPosition, map }: MapRenderProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const draw = (ctx: CanvasRenderingContext2D) => {
-    ctx.fillStyle = "black";
-
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.fillStyle = "#000000";
     for (const pos of visitedPosition) {

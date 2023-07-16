@@ -2,24 +2,16 @@
   "name": "map-exploration",
   "version": "1.0.0",
   "description": "Recruitment project for Akena",
-  "main": "index.js",
+  "source": "src/index.html",
   "scripts": {
-    "start": "webpack serve --port 3000",
-    "build": "NODE_ENV=production webpack"
+    "start": "parcel",
+    "build": "parcel build"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
-    "css-loader": "^6.8.1",
-    "html-webpack-plugin": "^5.5.3",
-    "mini-css-extract-plugin": "^2.7.6",
-    "ts-loader": "^9.4.4",
-    "typescript": "^5.1.6",
-    "webpack": "^5.88.1",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "parcel": "^2.9.3",
+    "process": "^0.11.10"
   },
   "dependencies": {
     "react": "^18.2.0",
