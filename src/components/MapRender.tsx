@@ -9,28 +9,31 @@ interface MapRenderProps {
 }
 
 export const MapRender = ({ userPosition, map, cellSize }: MapRenderProps) => {
-  const visitedPosition: Position[] = [];
-  const visitedRadius = 5;
+  const visitedRadius = 15;
   const userRadius = 5;
-  for (const pos of map.iterVisitedPosition()) {
-    visitedPosition.push(pos);
-  }
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const draw = (ctx: CanvasRenderingContext2D) => {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    const img = new Image();
-    ctx.globalAlpha = 1;
-    img.onload = () => {
+    const mapImg = new Image();
+    const catImg = new Image();
+    mapImg.onload = () => {
       console.log("Loaded successfully");
+      const visitedPosition: Position[] = [];
+      for (const pos of map.iterVisitedPosition()) {
+        visitedPosition.push(pos);
+      }
+      console.log("Visited position count", visitedPosition.length);
       for (const visitedPos of visitedPosition) {
         console.log("Processing visited position:", visitedPos);
-        // ctx.beginPath();
-        // ctx.arc(pos.x, pos.y, 3 * Math.sin(25 * 0.05) ** 2, 0, 2 * Math.PI);
-        ctx.fillStyle = "blue";
-        ctx.fillRect(
+        ctx.drawImage(
+          mapImg,
+          visitedPos.x * cellSize - visitedRadius,
+          visitedPos.y * cellSize - visitedRadius,
+          visitedRadius * 2,
+          visitedRadius * 2,
           visitedPos.x * cellSize - visitedRadius,
           visitedPos.y * cellSize - visitedRadius,
           visitedRadius * 2,
@@ -38,8 +41,12 @@ export const MapRender = ({ userPosition, map, cellSize }: MapRenderProps) => {
         );
       }
 
-      ctx.fillStyle = "orange";
-      ctx.fillRect(
+      ctx.drawImage(
+        catImg,
+        0,
+        0,
+        catImg.width,
+        catImg.height,
         userPosition.x * cellSize - userRadius,
         userPosition.y * cellSize - userRadius,
         userRadius * 2,
@@ -47,8 +54,9 @@ export const MapRender = ({ userPosition, map, cellSize }: MapRenderProps) => {
       );
       console.log({ userPosition });
     };
-    img.src =
+    mapImg.src =
       "https://voxelsmash.com/wp-content/uploads/2022/08/factorio-best-tips-for-beginners.jpg";
+    catImg.src = "https://i.imgur.com/7oHPx0S.png";
   };
 
   useEffect(() => {

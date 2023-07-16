@@ -7,20 +7,22 @@ import { GameMap } from "../GameMap";
 export const Game = () => {
   const mapWidth = 600;
   const mapHeight = 400;
-  const userSize = 20;
-  const cellSize = 10;
+  const cellSize = 30;
+  const userSize = cellSize;
   const userInitialPosition: Position = {
-    x: (mapWidth / 2) / cellSize,
-    y: (mapHeight / 2) / cellSize,
+    x: Math.round(mapWidth / 2 / cellSize),
+    y: Math.round(mapHeight / 2 / cellSize),
   };
 
-  const [userPosition, setUserPosition] = useState<Position>(userInitialPosition);
+  const [userPosition, setUserPosition] =
+    useState<Position>(userInitialPosition);
   const [map] = useState<GameMap>(new GameMap(mapWidth, mapHeight));
 
   const updateUserPosition = (updated: Position) => {
+    console.log("updateUserPosition", updated);
     setUserPosition(updated);
     map.markVisited(updated);
-  }
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

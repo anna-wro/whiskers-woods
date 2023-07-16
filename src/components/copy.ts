@@ -1,3 +1,3 @@
 export const copy = {
-    title: 'Very Empty Map Explorer',
+    title: 'Not-so-empty Map Explorer',
 }
