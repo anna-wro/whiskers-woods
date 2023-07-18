@@ -30,7 +30,7 @@ Whiskers, our cat character, doesn't make an immediate appearance when the game 
 
 Whiskers can find cozy corners in the map to retreat to. Just like humans, our furry friends also appreciate their privacy and a snug spot to relax in!
 
-Please ~~pretend~~note that this intentional design choice ~~and it's not cause because of the upcoming deadline~~.
+Please ~~pretend~~ note that this intentional design choice ~~and it's not because of the upcoming deadline~~.
 
 ## Coming soon
 
