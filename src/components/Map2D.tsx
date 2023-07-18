@@ -8,7 +8,7 @@ const Map2D = () => {
   const height = 600;
   const cellSize = 20;
   const visitedRadius = cellSize / 2;
-  const userRadius = visitedRadius / 2;
+  const userRadius = 10;
   const canvasRef = useRef(null);
   const userPositionRef = useRef({
     x: Math.floor(width / 2 / cellSize),
@@ -19,6 +19,10 @@ const Map2D = () => {
     const mapImg = new Image();
     const catImg = new Image();
     mapImg.onload = () => {
+      // Fill unvisited areas with a fog-of-war effect
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
       // Loop through each cell in the map array
       for (let x = 0; x < map.length; x++) {
         for (let y = 0; y < map[0].length; y++) {
@@ -26,17 +30,18 @@ const Map2D = () => {
             // Cell is visited, fill it with the map image
             ctx.drawImage(
               mapImg,
-              x * cellSize - visitedRadius,
-              y * cellSize - visitedRadius,
+              x * cellSize,
+              y * cellSize,
               visitedRadius * 2,
               visitedRadius * 2,
-              x * cellSize - visitedRadius,
-              y * cellSize - visitedRadius,
+              x * cellSize,
+              y * cellSize,
               visitedRadius * 2,
               visitedRadius * 2
             );
           } else {
             // Cell is not visited, fill it with black color
+            ctx.fillStyle = "black";
             ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
           }
         }
@@ -54,7 +59,7 @@ const Map2D = () => {
       );
     };
     mapImg.src = mapImgSrc;
-    catImg.src = "https://i.imgur.com/7oHPx0S.png";
+    catImg.src = "https://em-content.zobj.net/thumbs/240/microsoft/319/black-cat_1f408-200d-2b1b.png";
   };
 
   // Initialize the map
@@ -67,37 +72,26 @@ const Map2D = () => {
     console.assert(updated.x < map.length, "Invalid x");
     console.assert(updated.y < map[updated.x].length, "Invalid y");
 
-    if (
-      updated.x >= 0 &&
-      updated.x < map.length &&
-      updated.y >= 0 &&
-      updated.y < map[updated.x].length
-    ) {
-      setMap((prevMap) => {
-        const updatedMap = [...prevMap];
-        // Mark the current tile and its surrounding tiles as visited
-        for (let x = updated.x - 1; x <= updated.x + 1; x++) {
-          for (let y = updated.y - 1; y <= updated.y + 1; y++) {
-            if (
-              x >= 0 &&
-              x < updatedMap.length &&
-              y >= 0 &&
-              y < updatedMap[x].length
-            ) {
-              updatedMap[x][y] = true;
-            }
-          }
+    setMap((prevMap) => {
+      const updatedMap = [...prevMap];
+      const radius = 2;
+      // Mark the current tile and its surrounding tiles as visited
+      for (let x = Math.max(updated.x - radius, 0); x < Math.min(updated.x + radius, map.length); x++) {
+        for (let y = Math.max(updated.y - radius, 0); y < Math.min(updated.y + radius, map[updated.x].length); y++) {
+          console.log('Mark visited:', {x, y})
+          updatedMap[x][y] = true;
         }
-        return updatedMap;
-      });
-    }
+      }
+      return updatedMap;
+    }); 
   };
 
   useEffect(() => {
-    markVisited(userPositionRef.current); // Mark initial position as visited
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext("2d");
       draw(ctx);
+
+      markVisited(userPositionRef.current); // Mark initial position as visited
     }
   }, []);
 
