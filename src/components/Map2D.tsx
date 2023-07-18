@@ -6,9 +6,9 @@ const Map2D = () => {
   // TODO move to config
   const width = 800;
   const height = 600;
-  const cellSize = 40;
-  const visitedRadius = 20;
-  const userRadius = 10;
+  const cellSize = 20;
+  const visitedRadius = cellSize / 2;
+  const userRadius = visitedRadius / 2;
   const canvasRef = useRef(null);
   const userPositionRef = useRef({
     x: Math.floor(width / 2 / cellSize),
@@ -19,9 +19,11 @@ const Map2D = () => {
     const mapImg = new Image();
     const catImg = new Image();
     mapImg.onload = () => {
-      for (let x = 0; x <= ctx.canvas.width / cellSize; x++) {
-        for (let y = 0; y <= ctx.canvas.height / cellSize; y++) {
-          if (map[x] && map[x][y]) {
+      // Loop through each cell in the map array
+      for (let x = 0; x < map.length; x++) {
+        for (let y = 0; y < map[0].length; y++) {
+          if (map[x][y]) {
+            // Cell is visited, fill it with the map image
             ctx.drawImage(
               mapImg,
               x * cellSize - visitedRadius,
@@ -34,13 +36,8 @@ const Map2D = () => {
               visitedRadius * 2
             );
           } else {
-            ctx.fillRect(
-              x * cellSize - visitedRadius,
-              y * cellSize - visitedRadius,
-              visitedRadius * 2,
-              visitedRadius * 2
-            );
-            ctx.stroke();
+            // Cell is not visited, fill it with black color
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
           }
         }
       }
@@ -78,7 +75,19 @@ const Map2D = () => {
     ) {
       setMap((prevMap) => {
         const updatedMap = [...prevMap];
-        updatedMap[updated.x][updated.y] = true;
+        // Mark the current tile and its surrounding tiles as visited
+        for (let x = updated.x - 1; x <= updated.x + 1; x++) {
+          for (let y = updated.y - 1; y <= updated.y + 1; y++) {
+            if (
+              x >= 0 &&
+              x < updatedMap.length &&
+              y >= 0 &&
+              y < updatedMap[x].length
+            ) {
+              updatedMap[x][y] = true;
+            }
+          }
+        }
         return updatedMap;
       });
     }
