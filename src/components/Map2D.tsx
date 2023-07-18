@@ -6,8 +6,10 @@ import {
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
   CELL_SIZE,
+  CELLS_TO_REVEAL,
   VISITED_RADIUS,
   USER_RADIUS,
+  USER_MOVE_SPEED,
 } from "../consts/config";
 import Header from "./Header";
 
@@ -73,19 +75,17 @@ const Map2D = () => {
 
     setMap((prevMap) => {
       const updatedMap = [...prevMap];
-      const radius = 3;
       // Mark the current tile and its surrounding tiles as visited
       for (
-        let x = Math.max(updated.x - radius, 0);
-        x < Math.min(updated.x + radius, map.length);
+        let x = Math.max(updated.x - CELLS_TO_REVEAL, 0);
+        x < Math.min(updated.x + CELLS_TO_REVEAL, map.length);
         x++
       ) {
         for (
-          let y = Math.max(updated.y - radius, 0);
-          y < Math.min(updated.y + radius, map[updated.x].length);
+          let y = Math.max(updated.y - CELLS_TO_REVEAL, 0);
+          y < Math.min(updated.y + CELLS_TO_REVEAL, map[updated.x].length);
           y++
         ) {
-          console.log("Mark visited:", { x, y });
           updatedMap[x][y] = true;
         }
       }
@@ -113,18 +113,16 @@ const Map2D = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      const distance = 1;
-
       let { x, y } = userPositionRef.current;
 
       if (event.key === "ArrowUp") {
-        y = Math.max(y - distance, 0);
+        y = Math.max(y - USER_MOVE_SPEED, 0);
       } else if (event.key === "ArrowDown") {
-        y = Math.min(y + distance, CANVAS_HEIGHT / CELL_SIZE);
+        y = Math.min(y + USER_MOVE_SPEED, CANVAS_HEIGHT / CELL_SIZE);
       } else if (event.key === "ArrowLeft") {
-        x = Math.max(x - distance, 0);
+        x = Math.max(x - USER_MOVE_SPEED, 0);
       } else if (event.key === "ArrowRight") {
-        x = Math.min(x + distance, CANVAS_WIDTH / CELL_SIZE);
+        x = Math.min(x + USER_MOVE_SPEED, CANVAS_WIDTH / CELL_SIZE);
       }
 
       if (
