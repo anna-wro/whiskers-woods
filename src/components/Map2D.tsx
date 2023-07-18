@@ -146,14 +146,12 @@ const Map2D = () => {
     <div className="container">
       <Header />
       <div className="tip">{gameStarted ? copy.tip : copy.afterKeypress}</div>
-      <div className="mapContainer">
-        <canvas
-          ref={canvasRef}
-          width={CANVAS_WIDTH}
-          height={CANVAS_HEIGHT}
-          className="map"
-        />
-      </div>
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        className="map"
+      />
     </div>
   );
 };
