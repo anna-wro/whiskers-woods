@@ -1,5 +1,16 @@
 body {
-  color: rgb(0, 0, 255);
+  color: #393939;
+  font-family: Tahoma, Verdana, sans-serif;
+}
+
+.title {
+  font-size: 2em;
+}
+
+.tip {
+  font-style: italic;
+  font-size: 0.8em;
+  margin-bottom: 20px;
 }
 
 .container {
@@ -12,17 +23,6 @@ body {
   justify-content: center;
 }
 
-.map-container {
-  width: 600px;
-  height: 400px;
-  background-color: #c9d8de;
-  position: relative;
-}
-
-.user {
-  width: 20px;
-  height: 20px;
-  background-color: rgb(46, 35, 246);
-  border-radius: 50%;
-  position: absolute;
+.map {
+  border-radius: 8px;
 }

@@ -1,19 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
-import { copy } from "./copy";
+import { copy } from "../consts/copy";
 import mapImgSrc from "../assets/map.jpg";
 import playerImgSrc from "../assets/player.png";
+import {
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
+  CELL_SIZE,
+  VISITED_RADIUS,
+  USER_RADIUS,
+} from "../consts/config";
 
 const Map2D = () => {
-  // TODO move to config
-  const width = 800;
-  const height = 600;
-  const cellSize = 30;
-  const visitedRadius = cellSize / 2;
-  const userRadius = 10;
   const canvasRef = useRef(null);
+  const [tipDisplayed, setTipDisplayed] = useState(true);
   const userPositionRef = useRef({
-    x: Math.floor(width / 2 / cellSize),
-    y: Math.floor(height / 2 / cellSize),
+    x: Math.floor(CANVAS_WIDTH / 2 / CELL_SIZE),
+    y: Math.floor(CANVAS_HEIGHT / 2 / CELL_SIZE),
   });
 
   const draw = (ctx) => {
@@ -26,19 +28,19 @@ const Map2D = () => {
             // Cell is visited, fill it with the map image
             ctx.drawImage(
               mapImg,
-              x * cellSize,
-              y * cellSize,
-              visitedRadius * 2,
-              visitedRadius * 2,
-              x * cellSize,
-              y * cellSize,
-              visitedRadius * 2,
-              visitedRadius * 2
+              x * CELL_SIZE,
+              y * CELL_SIZE,
+              VISITED_RADIUS * 2,
+              VISITED_RADIUS * 2,
+              x * CELL_SIZE,
+              y * CELL_SIZE,
+              VISITED_RADIUS * 2,
+              VISITED_RADIUS * 2
             );
           } else {
             // Cell is not visited, fill it with black color
-            ctx.fillStyle = "black";
-            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+            ctx.fillStyle = "#575757";
+            ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
           }
         }
       }
@@ -48,10 +50,10 @@ const Map2D = () => {
         0,
         playerImg.width,
         playerImg.height,
-        userPositionRef.current.x * cellSize - userRadius,
-        userPositionRef.current.y * cellSize - userRadius,
-        userRadius * 2,
-        userRadius * 2
+        userPositionRef.current.x * CELL_SIZE - USER_RADIUS,
+        userPositionRef.current.y * CELL_SIZE - USER_RADIUS,
+        USER_RADIUS * 2,
+        USER_RADIUS * 2
       );
     };
     mapImg.src = mapImgSrc;
@@ -59,8 +61,8 @@ const Map2D = () => {
   };
 
   // Initialize the map
-  const initialMap = Array.from({ length: width / cellSize + 1 }, () =>
-    Array.from({ length: height / cellSize + 1 }, () => false)
+  const initialMap = Array.from({ length: CANVAS_WIDTH / CELL_SIZE + 1 }, () =>
+    Array.from({ length: CANVAS_HEIGHT / CELL_SIZE + 1 }, () => false)
   );
   const [map, setMap] = useState(initialMap);
 
@@ -70,7 +72,7 @@ const Map2D = () => {
 
     setMap((prevMap) => {
       const updatedMap = [...prevMap];
-      const radius = 2;
+      const radius = 3;
       // Mark the current tile and its surrounding tiles as visited
       for (
         let x = Math.max(updated.x - radius, 0);
@@ -111,19 +113,25 @@ const Map2D = () => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       const distance = 1;
+
       let { x, y } = userPositionRef.current;
 
       if (event.key === "ArrowUp") {
         y = Math.max(y - distance, 0);
       } else if (event.key === "ArrowDown") {
-        y = Math.min(y + distance, height / cellSize);
+        y = Math.min(y + distance, CANVAS_HEIGHT / CELL_SIZE);
       } else if (event.key === "ArrowLeft") {
         x = Math.max(x - distance, 0);
       } else if (event.key === "ArrowRight") {
-        x = Math.min(x + distance, width / cellSize);
+        x = Math.min(x + distance, CANVAS_WIDTH / CELL_SIZE);
       }
 
-      updateUserPosition({ x, y });
+      if (
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)
+      ) {
+        updateUserPosition({ x, y });
+        setTipDisplayed(false);
+      }
     };
 
     document.addEventListener("keydown", handleKeyDown);
@@ -135,8 +143,14 @@ const Map2D = () => {
 
   return (
     <div className="container">
-      <h1>{copy.title}</h1>
-      <canvas ref={canvasRef} width={width} height={height} />
+      <h1 className="title">{copy.title}</h1>
+      <p className="tip">{tipDisplayed ? copy.tip : copy.afterKeypress}</p>
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        className="map"
+      />
     </div>
   );
 };
