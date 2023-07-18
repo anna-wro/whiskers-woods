@@ -20,11 +20,6 @@ const Map2D = () => {
     const mapImg = new Image();
     const playerImg = new Image();
     mapImg.onload = () => {
-      // Fill unvisited areas with a fog-of-war effect
-      ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-      // Loop through each cell in the map array
       for (let x = 0; x < map.length; x++) {
         for (let y = 0; y < map[0].length; y++) {
           if (map[x][y]) {
