@@ -1,15 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { copy } from "./copy";
+import mapImgSrc from "../assets/map.jpg";
 
 const Map2D = () => {
-  const userPositionRef = useRef({ x: 0, y: 0 });
-
-  const width = 600;
-  const height = 400;
-  const cellSize = 30;
-  const visitedRadius = 15;
-  const userRadius = 5;
+  // TODO move to config
+  const width = 800;
+  const height = 600;
+  const cellSize = 40;
+  const visitedRadius = 20;
+  const userRadius = 10;
   const canvasRef = useRef(null);
+  const userPositionRef = useRef({
+    x: Math.floor(width / 2 / cellSize),
+    y: Math.floor(height / 2 / cellSize),
+  });
 
   const draw = (ctx) => {
     const mapImg = new Image();
@@ -52,8 +56,7 @@ const Map2D = () => {
         userRadius * 2
       );
     };
-    mapImg.src =
-      "https://voxelsmash.com/wp-content/uploads/2022/08/factorio-best-tips-for-beginners.jpg";
+    mapImg.src = mapImgSrc;
     catImg.src = "https://i.imgur.com/7oHPx0S.png";
   };
 
@@ -67,32 +70,36 @@ const Map2D = () => {
     console.assert(updated.x < map.length, "Invalid x");
     console.assert(updated.y < map[updated.x].length, "Invalid y");
 
-    setMap((prevMap) => {
-      const updatedMap = [...prevMap];
-      updatedMap[updated.x][updated.y] = true;
-      return updatedMap;
-    });
+    if (
+      updated.x >= 0 &&
+      updated.x < map.length &&
+      updated.y >= 0 &&
+      updated.y < map[updated.x].length
+    ) {
+      setMap((prevMap) => {
+        const updatedMap = [...prevMap];
+        updatedMap[updated.x][updated.y] = true;
+        return updatedMap;
+      });
+    }
   };
+
+  useEffect(() => {
+    markVisited(userPositionRef.current); // Mark initial position as visited
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext("2d");
+      draw(ctx);
+    }
+  }, []);
 
   const updateUserPosition = (updated) => {
     userPositionRef.current = updated;
     markVisited(updated);
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext("2d");
+      draw(ctx);
+    }
   };
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      return;
-    }
-    const context = canvas.getContext("2d");
-    if (!context) {
-      return;
-    }
-    const render = () => {
-      draw(context);
-    };
-    render();
-  }, [draw, map]); // Include 'map' as a dependency
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -117,7 +124,7 @@ const Map2D = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [width, height, cellSize]);
+  }, []);
 
   return (
     <div className="container">
