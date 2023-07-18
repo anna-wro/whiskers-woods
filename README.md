@@ -34,7 +34,6 @@ Please ~~pretend~~ note that this intentional design choice ~~and it's not becau
 
 ## Coming soon
 
-- **Test coverage** - everyone loves having a bug-free experience. So do I.
 - **Progress indicator** will serve as a motivating tool, inspiring you to uncover every nook and cranny of the woods and complete your exploration journey.
 - **Obstacles and Collision Detection** - Prepare for new challenges in the woods! Obstacles such as fallen logs, rivers, or rocks will be added to the game. Whiskers must navigate around thesem to continue exploring. 
 - **New Characters and Interactions** - Whiskers won't be alone forever! More characters will be introduced, each with their own stories and interactions.
