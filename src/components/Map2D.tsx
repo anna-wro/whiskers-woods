@@ -144,7 +144,7 @@ const Map2D = () => {
   return (
     <div className="container">
       <h1 className="title">{copy.title}</h1>
-      <p className="tip">{tipDisplayed ? copy.tip : copy.afterKeypress}</p>
+      <div className="tip">{tipDisplayed ? copy.tip : copy.afterKeypress}</div>
       <div className="mapContainer">
         <canvas
           ref={canvasRef}
