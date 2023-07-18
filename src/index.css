@@ -1,6 +1,7 @@
 body {
   color: #393939;
   font-family: Tahoma, Verdana, sans-serif;
+  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
 }
 
 .title {
@@ -9,8 +10,8 @@ body {
 
 .tip {
   font-style: italic;
-  font-size: 0.8em;
-  margin-bottom: 20px;
+  font-size: 1em;
+  margin-bottom: 40px;
 }
 
 .container {
@@ -25,4 +26,5 @@ body {
 
 .map {
   border-radius: 8px;
+  margin-bottom: 40px;
 }

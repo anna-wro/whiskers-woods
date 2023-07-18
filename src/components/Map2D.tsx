@@ -38,7 +38,7 @@ const Map2D = () => {
               VISITED_RADIUS * 2
             );
           } else {
-            // Cell is not visited, fill it with black color
+            // Cell is not visited, fill it with dark color
             ctx.fillStyle = "#575757";
             ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
           }
@@ -145,12 +145,14 @@ const Map2D = () => {
     <div className="container">
       <h1 className="title">{copy.title}</h1>
       <p className="tip">{tipDisplayed ? copy.tip : copy.afterKeypress}</p>
-      <canvas
-        ref={canvasRef}
-        width={CANVAS_WIDTH}
-        height={CANVAS_HEIGHT}
-        className="map"
-      />
+      <div className="mapContainer">
+        <canvas
+          ref={canvasRef}
+          width={CANVAS_WIDTH}
+          height={CANVAS_HEIGHT}
+          className="map"
+        />
+      </div>
     </div>
   );
 };
