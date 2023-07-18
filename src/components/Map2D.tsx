@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { copy } from "./copy";
 import mapImgSrc from "../assets/map.jpg";
+import playerImgSrc from "../assets/player.png";
 
 const Map2D = () => {
   // TODO move to config
   const width = 800;
   const height = 600;
-  const cellSize = 20;
+  const cellSize = 30;
   const visitedRadius = cellSize / 2;
   const userRadius = 10;
   const canvasRef = useRef(null);
@@ -17,10 +18,10 @@ const Map2D = () => {
 
   const draw = (ctx) => {
     const mapImg = new Image();
-    const catImg = new Image();
+    const playerImg = new Image();
     mapImg.onload = () => {
       // Fill unvisited areas with a fog-of-war effect
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+      ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
       // Loop through each cell in the map array
@@ -47,11 +48,11 @@ const Map2D = () => {
         }
       }
       ctx.drawImage(
-        catImg,
+        playerImg,
         0,
         0,
-        catImg.width,
-        catImg.height,
+        playerImg.width,
+        playerImg.height,
         userPositionRef.current.x * cellSize - userRadius,
         userPositionRef.current.y * cellSize - userRadius,
         userRadius * 2,
@@ -59,7 +60,7 @@ const Map2D = () => {
       );
     };
     mapImg.src = mapImgSrc;
-    catImg.src = "https://em-content.zobj.net/thumbs/240/microsoft/319/black-cat_1f408-200d-2b1b.png";
+    playerImg.src = playerImgSrc;
   };
 
   // Initialize the map
@@ -76,14 +77,22 @@ const Map2D = () => {
       const updatedMap = [...prevMap];
       const radius = 2;
       // Mark the current tile and its surrounding tiles as visited
-      for (let x = Math.max(updated.x - radius, 0); x < Math.min(updated.x + radius, map.length); x++) {
-        for (let y = Math.max(updated.y - radius, 0); y < Math.min(updated.y + radius, map[updated.x].length); y++) {
-          console.log('Mark visited:', {x, y})
+      for (
+        let x = Math.max(updated.x - radius, 0);
+        x < Math.min(updated.x + radius, map.length);
+        x++
+      ) {
+        for (
+          let y = Math.max(updated.y - radius, 0);
+          y < Math.min(updated.y + radius, map[updated.x].length);
+          y++
+        ) {
+          console.log("Mark visited:", { x, y });
           updatedMap[x][y] = true;
         }
       }
       return updatedMap;
-    }); 
+    });
   };
 
   useEffect(() => {
