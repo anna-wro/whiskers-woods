@@ -9,10 +9,11 @@ import {
   VISITED_RADIUS,
   USER_RADIUS,
 } from "../consts/config";
+import Header from "./Header";
 
 const Map2D = () => {
   const canvasRef = useRef(null);
-  const [tipDisplayed, setTipDisplayed] = useState(true);
+  const [gameStarted, setGameStarted] = useState(true);
   const userPositionRef = useRef({
     x: Math.floor(CANVAS_WIDTH / 2 / CELL_SIZE),
     y: Math.floor(CANVAS_HEIGHT / 2 / CELL_SIZE),
@@ -39,7 +40,7 @@ const Map2D = () => {
             );
           } else {
             // Cell is not visited, fill it with dark color
-            ctx.fillStyle = "#575757";
+            ctx.fillStyle = "#3f615b";
             ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
           }
         }
@@ -130,7 +131,7 @@ const Map2D = () => {
         ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)
       ) {
         updateUserPosition({ x, y });
-        setTipDisplayed(false);
+        setGameStarted(false);
       }
     };
 
@@ -143,8 +144,8 @@ const Map2D = () => {
 
   return (
     <div className="container">
-      <h1 className="title">{copy.title}</h1>
-      <div className="tip">{tipDisplayed ? copy.tip : copy.afterKeypress}</div>
+      <Header />
+      <div className="tip">{gameStarted ? copy.tip : copy.afterKeypress}</div>
       <div className="mapContainer">
         <canvas
           ref={canvasRef}
