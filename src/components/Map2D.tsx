@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { copy } from "../consts/copy";
 import mapImgSrc from "../assets/map.jpg";
 import playerImgSrc from "../assets/player.png";
@@ -19,6 +19,48 @@ const initialMap = Array.from({ length: CANVAS_WIDTH / CELL_SIZE + 1 }, () =>
   Array.from({ length: CANVAS_HEIGHT / CELL_SIZE + 1 }, () => false)
 );
 
+const draw = (ctx, map, userPositionRef) => {
+  const mapImg = new Image();
+  const playerImg = new Image();
+  mapImg.onload = () => {
+    for (let x = 0; x < map.length; x++) {
+      for (let y = 0; y < map[0].length; y++) {
+        if (map[x][y]) {
+          // Cell is visited, fill it with the map image
+          ctx.drawImage(
+            mapImg,
+            x * CELL_SIZE,
+            y * CELL_SIZE,
+            VISITED_RADIUS * 2,
+            VISITED_RADIUS * 2,
+            x * CELL_SIZE,
+            y * CELL_SIZE,
+            VISITED_RADIUS * 2,
+            VISITED_RADIUS * 2
+          );
+        } else {
+          // Cell is not visited, fill it with dark color
+          ctx.fillStyle = colors.mapBg;
+          ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        }
+      }
+    }
+    ctx.drawImage(
+      playerImg,
+      0,
+      0,
+      playerImg.width,
+      playerImg.height,
+      userPositionRef.current.x * CELL_SIZE - USER_RADIUS,
+      userPositionRef.current.y * CELL_SIZE - USER_RADIUS,
+      USER_RADIUS * 2,
+      USER_RADIUS * 2
+    );
+  };
+  mapImg.src = mapImgSrc;
+  playerImg.src = playerImgSrc;
+};
+
 const Map2D = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [gameStarted, setGameStarted] = useState(true);
@@ -27,89 +69,50 @@ const Map2D = () => {
     y: Math.floor(CANVAS_HEIGHT / 2 / CELL_SIZE),
   });
 
-  const draw = (ctx) => {
-    const mapImg = new Image();
-    const playerImg = new Image();
-    mapImg.onload = () => {
-      for (let x = 0; x < map.length; x++) {
-        for (let y = 0; y < map[0].length; y++) {
-          if (map[x][y]) {
-            // Cell is visited, fill it with the map image
-            ctx.drawImage(
-              mapImg,
-              x * CELL_SIZE,
-              y * CELL_SIZE,
-              VISITED_RADIUS * 2,
-              VISITED_RADIUS * 2,
-              x * CELL_SIZE,
-              y * CELL_SIZE,
-              VISITED_RADIUS * 2,
-              VISITED_RADIUS * 2
-            );
-          } else {
-            // Cell is not visited, fill it with dark color
-            ctx.fillStyle = colors.mapBg;
-            ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-          }
-        }
-      }
-      ctx.drawImage(
-        playerImg,
-        0,
-        0,
-        playerImg.width,
-        playerImg.height,
-        userPositionRef.current.x * CELL_SIZE - USER_RADIUS,
-        userPositionRef.current.y * CELL_SIZE - USER_RADIUS,
-        USER_RADIUS * 2,
-        USER_RADIUS * 2
-      );
-    };
-    mapImg.src = mapImgSrc;
-    playerImg.src = playerImgSrc;
-  };
-
   const [map, setMap] = useState(initialMap);
 
-  const markVisited = (updated) => {
-    console.assert(updated.x < map.length, "Invalid x");
-    console.assert(updated.y < map[updated.x].length, "Invalid y");
+  const markVisited = useCallback(
+    (updated) => {
+      console.assert(updated.x < map.length, "Invalid x");
+      console.assert(updated.y < map[updated.x].length, "Invalid y");
 
-    setMap((prevMap) => {
-      const updatedMap = [...prevMap];
-      // Mark the current tile and its surrounding tiles as visited
-      for (
-        let x = Math.max(updated.x - CELLS_TO_REVEAL, 0);
-        x < Math.min(updated.x + CELLS_TO_REVEAL, map.length);
-        x++
-      ) {
+      setMap((prevMap) => {
+        const updatedMap = [...prevMap];
+        // Mark the current tile and its surrounding tiles as visited
         for (
-          let y = Math.max(updated.y - CELLS_TO_REVEAL, 0);
-          y < Math.min(updated.y + CELLS_TO_REVEAL, map[updated.x].length);
-          y++
+          let x = Math.max(updated.x - CELLS_TO_REVEAL, 0);
+          x < Math.min(updated.x + CELLS_TO_REVEAL, map.length);
+          x++
         ) {
-          updatedMap[x][y] = true;
+          for (
+            let y = Math.max(updated.y - CELLS_TO_REVEAL, 0);
+            y < Math.min(updated.y + CELLS_TO_REVEAL, map[updated.x].length);
+            y++
+          ) {
+            updatedMap[x][y] = true;
+          }
         }
-      }
-      return updatedMap;
-    });
-  };
+        return updatedMap;
+      });
+    },
+    [map]
+  );
 
   useEffect(() => {
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext("2d");
-      draw(ctx);
+      draw(ctx, map, userPositionRef);
 
       markVisited(userPositionRef.current); // Mark initial position as visited
     }
-  }, []);
+  }, [map, markVisited, userPositionRef]);
 
   const updateUserPosition = (updated) => {
     userPositionRef.current = updated;
     markVisited(updated);
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext("2d");
-      draw(ctx);
+      draw(ctx, map, userPositionRef);
     }
   };
 
@@ -140,7 +143,7 @@ const Map2D = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [updateUserPosition, setGameStarted]);
 
   return (
     <div className="container">
