@@ -14,7 +14,7 @@ import {
 import Header from "./Header";
 
 const Map2D = () => {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [gameStarted, setGameStarted] = useState(true);
   const userPositionRef = useRef({
     x: Math.floor(CANVAS_WIDTH / 2 / CELL_SIZE),
