@@ -35,5 +35,5 @@ Please ~~pretend~~ note that this intentional design choice ~~and it's not becau
 ## Coming soon
 
 - **Progress indicator** - Will serve as a motivating tool, inspiring you to uncover every nook and cranny of the woods and complete your exploration journey.
-- **Obstacles and Collision Detection** - Prepare for new challenges in the woods! Obstacles such as fallen logs, rivers, or rocks will be added to the game. Whiskers must navigate around them to continue exploring. 
+- **Obstacles and Collision Detection** - Prepare for new challenges in the woods! Obstacles such as fallen logs, rivers, or rocks will be added to the game. Whiskers must navigate around them to continue exploring.
 - **More Interaction with Whiskers** - Get to know Whiskers better as he becomes a companion on your journey through the woods.

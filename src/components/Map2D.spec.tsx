@@ -1,4 +1,5 @@
 import React from "react";
+import "jest-canvas-mock";
 import { render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import Map2D from "./Map2D";
@@ -12,7 +13,7 @@ describe("Map2D Component", () => {
   it("should display the initial tip", () => {
     const { getByText } = render(<Map2D />);
     expect(
-      getByText(/I'm a little bit shy, try pressing the arrows!/)
+      getByText(/I'm a little bit shy, try pressing the arrows!/),
     ).toBeInTheDocument();
   });
 
@@ -31,7 +32,7 @@ describe("Map2D Component", () => {
     const { getByText } = render(<Map2D />);
     fireEvent.keyDown(document, { key: "A" });
     expect(
-      getByText(/I'm a little bit shy, try pressing the arrows!/)
+      getByText(/I'm a little bit shy, try pressing the arrows!/),
     ).toBeInTheDocument();
   });
 

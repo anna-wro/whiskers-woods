@@ -38,7 +38,7 @@ const Map2D = () => {
               x * CELL_SIZE,
               y * CELL_SIZE,
               VISITED_RADIUS * 2,
-              VISITED_RADIUS * 2
+              VISITED_RADIUS * 2,
             );
           } else {
             // Cell is not visited, fill it with dark color
@@ -56,7 +56,7 @@ const Map2D = () => {
         userPositionRef.current.x * CELL_SIZE - USER_RADIUS,
         userPositionRef.current.y * CELL_SIZE - USER_RADIUS,
         USER_RADIUS * 2,
-        USER_RADIUS * 2
+        USER_RADIUS * 2,
       );
     };
     mapImg.src = mapImgSrc;
@@ -65,7 +65,7 @@ const Map2D = () => {
 
   // Initialize the map
   const initialMap = Array.from({ length: CANVAS_WIDTH / CELL_SIZE + 1 }, () =>
-    Array.from({ length: CANVAS_HEIGHT / CELL_SIZE + 1 }, () => false)
+    Array.from({ length: CANVAS_HEIGHT / CELL_SIZE + 1 }, () => false),
   );
   const [map, setMap] = useState(initialMap);
 

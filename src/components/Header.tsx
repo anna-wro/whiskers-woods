@@ -3,9 +3,9 @@ import { copy } from "../consts/copy";
 
 const Header = () => {
   return (
-    <div className="header">
+    <header className="header">
       <h1 className="title">{copy.title}</h1>
-    </div>
+    </header>
   );
 };
 
