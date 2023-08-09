@@ -12,6 +12,12 @@ import {
   USER_MOVE_SPEED,
 } from "../consts/config";
 import Header from "./Header";
+import { colors } from "../consts/colors";
+
+// Initialize the map
+const initialMap = Array.from({ length: CANVAS_WIDTH / CELL_SIZE + 1 }, () =>
+  Array.from({ length: CANVAS_HEIGHT / CELL_SIZE + 1 }, () => false)
+);
 
 const Map2D = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -38,11 +44,11 @@ const Map2D = () => {
               x * CELL_SIZE,
               y * CELL_SIZE,
               VISITED_RADIUS * 2,
-              VISITED_RADIUS * 2,
+              VISITED_RADIUS * 2
             );
           } else {
             // Cell is not visited, fill it with dark color
-            ctx.fillStyle = "#3f615b";
+            ctx.fillStyle = colors.mapBg;
             ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
           }
         }
@@ -56,17 +62,13 @@ const Map2D = () => {
         userPositionRef.current.x * CELL_SIZE - USER_RADIUS,
         userPositionRef.current.y * CELL_SIZE - USER_RADIUS,
         USER_RADIUS * 2,
-        USER_RADIUS * 2,
+        USER_RADIUS * 2
       );
     };
     mapImg.src = mapImgSrc;
     playerImg.src = playerImgSrc;
   };
 
-  // Initialize the map
-  const initialMap = Array.from({ length: CANVAS_WIDTH / CELL_SIZE + 1 }, () =>
-    Array.from({ length: CANVAS_HEIGHT / CELL_SIZE + 1 }, () => false),
-  );
   const [map, setMap] = useState(initialMap);
 
   const markVisited = (updated) => {
