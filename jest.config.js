@@ -1,9 +1,7 @@
 module.exports = {
-  transform: {
-    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
-  },
-  testEnvironment: "jsdom",
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
   moduleNameMapper: {
-    "\\.(css|jpg|png)$": "<rootDir>/__mocks__/fileMock.js",
+    '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
   },
 };

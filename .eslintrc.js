@@ -1,15 +1,21 @@
 module.exports = {
   env: {
     browser: true,
+    node: true,
     es2021: true,
   },
-  extends: ["plugin:react/recommended", "prettier"],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+  ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
-  plugins: ["react", "html", "prettier"],
+  plugins: ['react', 'html', '@typescript-eslint'],
   rules: {
-    "prettier/prettier": "error",
+    'prettier/prettier': 'warn',
   },
 };

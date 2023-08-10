@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import { copy } from "../consts/copy";
-import mapImgSrc from "../assets/map.jpg";
-import playerImgSrc from "../assets/player.png";
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { copy } from '../consts/copy';
+import mapImgSrc from '../assets/map.jpg';
+import playerImgSrc from '../assets/player.png';
 import {
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
@@ -10,13 +10,12 @@ import {
   VISITED_RADIUS,
   USER_RADIUS,
   USER_MOVE_SPEED,
-} from "../consts/config";
-import Header from "./Header";
-import { colors } from "../consts/colors";
+} from '../consts/config';
+import Header from './Header';
+import { colors } from '../consts/colors';
 
-// Initialize the map
 const initialMap = Array.from({ length: CANVAS_WIDTH / CELL_SIZE + 1 }, () =>
-  Array.from({ length: CANVAS_HEIGHT / CELL_SIZE + 1 }, () => false)
+  Array.from({ length: CANVAS_HEIGHT / CELL_SIZE + 1 }, () => false),
 );
 
 const draw = (ctx, map, userPositionRef) => {
@@ -26,7 +25,6 @@ const draw = (ctx, map, userPositionRef) => {
     for (let x = 0; x < map.length; x++) {
       for (let y = 0; y < map[0].length; y++) {
         if (map[x][y]) {
-          // Cell is visited, fill it with the map image
           ctx.drawImage(
             mapImg,
             x * CELL_SIZE,
@@ -36,10 +34,9 @@ const draw = (ctx, map, userPositionRef) => {
             x * CELL_SIZE,
             y * CELL_SIZE,
             VISITED_RADIUS * 2,
-            VISITED_RADIUS * 2
+            VISITED_RADIUS * 2,
           );
         } else {
-          // Cell is not visited, fill it with dark color
           ctx.fillStyle = colors.mapBg;
           ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         }
@@ -54,7 +51,7 @@ const draw = (ctx, map, userPositionRef) => {
       userPositionRef.current.x * CELL_SIZE - USER_RADIUS,
       userPositionRef.current.y * CELL_SIZE - USER_RADIUS,
       USER_RADIUS * 2,
-      USER_RADIUS * 2
+      USER_RADIUS * 2,
     );
   };
   mapImg.src = mapImgSrc;
@@ -71,77 +68,72 @@ const Map2D = () => {
 
   const [map, setMap] = useState(initialMap);
 
-  const markVisited = useCallback(
-    (updated) => {
-      console.assert(updated.x < map.length, "Invalid x");
-      console.assert(updated.y < map[updated.x].length, "Invalid y");
-
-      setMap((prevMap) => {
-        const updatedMap = [...prevMap];
-        // Mark the current tile and its surrounding tiles as visited
+  const markVisited = useCallback(updated => {
+    setMap(prevMap => {
+      const updatedMap = [...prevMap];
+      for (
+        let x = Math.max(updated.x - CELLS_TO_REVEAL, 0);
+        x < Math.min(updated.x + CELLS_TO_REVEAL, prevMap.length);
+        x++
+      ) {
         for (
-          let x = Math.max(updated.x - CELLS_TO_REVEAL, 0);
-          x < Math.min(updated.x + CELLS_TO_REVEAL, map.length);
-          x++
+          let y = Math.max(updated.y - CELLS_TO_REVEAL, 0);
+          y < Math.min(updated.y + CELLS_TO_REVEAL, prevMap[updated.x].length);
+          y++
         ) {
-          for (
-            let y = Math.max(updated.y - CELLS_TO_REVEAL, 0);
-            y < Math.min(updated.y + CELLS_TO_REVEAL, map[updated.x].length);
-            y++
-          ) {
-            updatedMap[x][y] = true;
-          }
+          updatedMap[x][y] = true;
         }
-        return updatedMap;
-      });
-    },
-    [map]
-  );
+      }
+      return updatedMap;
+    });
+  }, []);
 
   useEffect(() => {
     if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext("2d");
+      const ctx = canvasRef.current.getContext('2d');
       draw(ctx, map, userPositionRef);
-
-      markVisited(userPositionRef.current); // Mark initial position as visited
     }
-  }, [map, markVisited, userPositionRef]);
+  }, [map, userPositionRef]);
 
-  const updateUserPosition = (updated) => {
+  useEffect(() => {
+    markVisited(userPositionRef.current); // Mark initial position as visited
+  }, [markVisited]);
+
+  const updateUserPosition = updated => {
     userPositionRef.current = updated;
     markVisited(updated);
     if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext("2d");
+      const ctx = canvasRef.current.getContext('2d');
       draw(ctx, map, userPositionRef);
     }
   };
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
+    const handleKeyDown = event => {
       let { x, y } = userPositionRef.current;
 
-      if (event.key === "ArrowUp") {
+      if (event.key === 'ArrowUp') {
         y = Math.max(y - USER_MOVE_SPEED, 0);
-      } else if (event.key === "ArrowDown") {
+      } else if (event.key === 'ArrowDown') {
         y = Math.min(y + USER_MOVE_SPEED, CANVAS_HEIGHT / CELL_SIZE);
-      } else if (event.key === "ArrowLeft") {
+      } else if (event.key === 'ArrowLeft') {
         x = Math.max(x - USER_MOVE_SPEED, 0);
-      } else if (event.key === "ArrowRight") {
+      } else if (event.key === 'ArrowRight') {
         x = Math.min(x + USER_MOVE_SPEED, CANVAS_WIDTH / CELL_SIZE);
       }
 
       if (
-        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)
+        ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)
       ) {
         updateUserPosition({ x, y });
         setGameStarted(false);
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [updateUserPosition, setGameStarted]);
 

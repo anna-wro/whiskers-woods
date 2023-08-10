@@ -1,3 +1,3 @@
 export const colors = {
-    mapBg: "#3f615b",
+  mapBg: '#3f615b',
 };

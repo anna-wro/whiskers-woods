@@ -1,5 +1,5 @@
-import React from "react";
-import { copy } from "../consts/copy";
+import React from 'react';
+import { copy } from '../consts/copy';
 
 const Header = () => {
   return (
